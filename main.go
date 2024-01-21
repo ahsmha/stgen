@@ -9,13 +9,12 @@ import (
 
 func help() {
 
-	help := `
-    stgen - Copyright (C) 2024  ahsmha
-	usage: stgen [args]
+	help := `stgen - simple static site generator
+usage: stgen [args]
 
-	args: 
-		generate PATH				generate the html files at the given PATH
-		serve [HOST:PORT]			serves 'site' folder
+args: 
+    generate PATH        generate the html files at the given PATH
+    serve [HOST:PORT]    serves 'site' folder
 	`
 
 	fmt.Println(help)
