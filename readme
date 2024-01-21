@@ -1,0 +1,18 @@
+FEATURES
+
+- file based
+- converts md files to html
+- template chosen by user. i make my own
+
+
+PLAN
+
+- CI/CD
+- ?
+
+
+FILE STRUCTURE
+    
+    .
+    |-- static/
+    |-- 

@@ -1,56 +1,57 @@
 package main
 
 import (
-	"html/template"
+	"fmt"
 	"log"
-	"net/http"
 	"os"
-	"path/filepath"
+	"stgen/cmd"
 )
 
-func main() {
-	fs := http.FileServer(http.Dir("./static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.HandleFunc("/", serveTemplate)
+func help() {
 
-	log.Print("Listening on :3000...")
-	err := http.ListenAndServe(":3000", nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	help := `
+    stgen - Copyright (C) 2024  ahsmha
+	usage: stgen [args]
+
+	args: 
+		generate PATH				generate the html files at the given PATH
+		serve [HOST:PORT]			serves 'site' folder
+	`
+
+	fmt.Println(help)
+	return
 }
 
-func serveTemplate(w http.ResponseWriter, r *http.Request) {
-	lp := filepath.Join("templates", "layout.html")
-	fp := filepath.Join("templates", filepath.Clean(r.URL.Path))
+func main() {
 
-	// Return a 404 if the template doesn't exist
-	info, err := os.Stat(fp)
-	if err != nil {
-		if os.IsNotExist(err) {
-			http.NotFound(w, r)
-			return
+	args := os.Args
+
+	hostPort := ":8282" // default host:port
+	path := "./"        // default path for generating html files
+	if len(args) == 3 {
+		hostPort = args[2]
+		path = args[2]
+	} else if len(args) != 1 || len(args) != 2 {
+		help()
+		return
+	}
+
+	switch args[1] {
+	case "generate":
+		err := cmd.Generate(path)
+		if err != nil {
+			log.Fatalf("error while generating files: %+v \n", err)
 		}
+
+	case "serve":
+		err := cmd.Serve(hostPort)
+		if err != nil {
+			log.Fatalf("error while serving files: %+v \n", err)
+		}
+
+	default:
+		help()
 	}
 
-	// Return a 404 if the request is for a directory
-	if info.IsDir() {
-		http.NotFound(w, r)
-		return
-	}
-
-	tmpl, err := template.ParseFiles(lp, fp)
-	if err != nil {
-		// Log the detailed error
-		log.Print(err.Error())
-		// Return a generic "Internal Server Error" message
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	err = tmpl.ExecuteTemplate(w, "layout", nil)
-	if err != nil {
-		log.Print(err.Error())
-		http.Error(w, http.StatusText(500), 500)
-	}
+	return
 }
