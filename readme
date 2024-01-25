@@ -3,6 +3,7 @@ FEATURES
 - file based
 - converts md files to html
 - template chosen by user. i make my own
+- ignores hidden folders or files
 
 
 PLAN

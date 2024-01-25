@@ -11,7 +11,7 @@ import (
 
 const (
 	PARENTFOLDER = "site"
-	PUBLICDIR = "public"
+	PUBLICDIR    = "public"
 )
 
 func Generate(path string) error {
@@ -43,3 +43,18 @@ func Generate(path string) error {
 	})
 	return nil
 }
+
+// get all directories and files.
+// make an index.html file. navbar(folder links); body(content)
+// for all directories move inside. and repeat the process.
+// for all files,
+
+// path: filepath
+// title: name of file
+// subtitle: can be added
+// date: (last updated) first-time-publish-date
+
+// nav.yml
+// ---
+// blogs/home.md
+// 
